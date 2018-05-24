@@ -4,55 +4,62 @@ var processor = function()
 {
 };
 var pro = new processor();
-var arr = [];
-var cases = []; 					
 // Add test cases
 
-function testCases()
+function writeToFile(input, nextAction)
 {
-	const readline = require('readline');
 	const fs = require('fs');
-	const rl = readline.createInterface(
+	fs.writeFile('./request.txt', input, function(err)
 	{
-		input : process.stdin
-	});
-	rl.on('line', (input) => 
-	{
-		if (input.trim() != '')
+		if (err) 
 		{
-			fs.writeFile('./request.txt', input, function(err)
-			{
-				if (err) throw console.log('error');
-				else 
-				{
-					readTestCase();
-		//			pro.operater(cases[0], [cases[1], cases[2]]);
-				}
-			});
+			error();
 		}
-		else
+		else 
 		{
-			console.log('no test case entered');
+			console.log('write success: ' + input);
+			nextAction('./request.txt');
 		}
-	rl.close();
 	});
 }
-testCases();
+function error()
+{
+	console.log('error');
+}
+function noTestCase()
+{
+	console.log('no test case entered');
+}
+function testCases(input, success, fail, nextAction)
+{
+	if (input.trim() != '')
+	{
+		success(input, nextAction);
+	}
+	else
+	{
+		fail();
+	}
+}
+testCases('add,a,5', writeToFile, noTestCase, readTestCase);
 // Read test case from file
-function readTestCase()
+function readTestCase(fpath)
 {
 	const fs = require('fs');
-	fs.readFile('./request.txt', 'utf8', function(err, data)
+	fs.readFile(fpath, 'utf8', function(err, data)
 	{
-		if (err) throw err;
+		if (err)
+		{
+			error();
+		}
 		if (data != '')
 		{
-		//	var cases = [];
+	
+			
+			var cases = [];
 			cases = data.split(',');
-			console.log(cases);
-			arr = [cases[1],cases[2]];
-			console.log(arr);
-			pro.operater(cases[0], arr);
+			//console.log(data.split(','));
+			pro.operater(cases[0],[cases[1], cases[2]]);
 		}
 	});
 }
@@ -71,138 +78,130 @@ processor.prototype.add = function(arr)
 		{
                		console.log(arr[i]);
 			var parsed = parseInt(arr[i],10);
-       			if (isNaN(parsed))
-			{
-				arr[i] = 0;
-			
-			}
 			sum += parsed;
 		}
 
-	console.log('-----------------------------');
-	console.log('Sum :', sum);
-	console.log('* Any thing other than numbers is considered "0"');
-	console.log('-----------------------------');
+		console.log('Sum :', sum);
 	}
 };
 
 
 processor.prototype.sub = function(arr)
-				{
+{
 
-	   
-					console.log('Number of Arguments :' +arr.length);
-					var sum = 0;
-					if (arr.length !== 2)
-					{
-						console.log('Warning: Unexpected Number of Arguments, x and y')
-					}
-					else 
-					{
-						console.log('Arguments :');
-	        				for (var i = 0; i < arr.length; i++)
-		        			{
-			                		console.log(arr[i]);
-			        			if (isNaN(arr[i]))
-							{
-								arr[i] = 0;
-							}
-							if (i === 0)
-							{
-								sum += arr[i];
-							}
-							else
-							{
-								sum -= arr[i];
-							}
-						}
 
-					console.log('-----------------------------');
-	        			console.log('Substraction :', sum);
-					console.log('* Any thing other than numbers is considered "0"');
-	        			console.log('-----------------------------');
+	console.log('Number of Arguments :' +arr.length);
+	var sum = 0;
+	if (arr.length !== 2)
+	{
+		console.log('Warning: Unexpected Number of Arguments, x and y')
+	}
+	else 
+	{
+		console.log('Arguments :');
+		for (var i = 0; i < arr.length; i++)
+		{
+			console.log(arr[i]);
+			if (isNaN(arr[i]))
+			{
+				arr[i] = 0;
+			}
+			if (i === 0)
+			{
+				sum += arr[i];
+			}
+			else
+			{
+				sum -= arr[i];
+			}
+		}
 
-	   				}
-				};
+	console.log('-----------------------------');
+	console.log('Substraction :', sum);
+	console.log('* Any thing other than numbers is considered "0"');
+	console.log('-----------------------------');
+
+	}
+};
 
 
 processor.prototype.mul = function(arr)
-				{
+{
 
-	   
-					console.log('Number of Arguments :' +arr.length);
-					var sum = 0;
-					if (arr.length !== 2)
-					{
-						console.log('Warning: Unexpected Number of Arguments, x and y')
-					}
-					else 
-					{
-						console.log('Arguments :');
-	        				for (var i = 0; i < arr.length; i++)
-		        			{
-			                		console.log(arr[i]);
-			        			if (isNaN(arr[i]))
-							{
-								arr[i] = 0;
-							}
-							if (i === 0)
-							{
-								sum += arr[i];
-							}
-							else
-							{
-								sum *= arr[i];
-							}
-						
-						}
 
-					console.log('-----------------------------');
-	        			console.log('Multiplication :', sum);
-					console.log('* Any thing other than numbers is considered "0"');
-	        			console.log('-----------------------------');
+	console.log('Number of Arguments :' +arr.length);
+	var sum = 0;
+	if (arr.length !== 2)
+	{
+		console.log('Warning: Unexpected Number of Arguments, x and y')
+	}
+	else 
+	{
+		console.log('Arguments :');
+		for (var i = 0; i < arr.length; i++)
+		{
+			console.log(arr[i]);
+			if (isNaN(arr[i]))
+			{
+				arr[i] = 0;
+			}
+			if (i === 0)
+			{
+				sum += arr[i];
+			}
+			else
+			{
+				sum *= arr[i];
+			}
+		
+		}
 
-	   				}
-				};
+	console.log('-----------------------------');
+	console.log('Multiplication :', sum);
+	console.log('* Any thing other than numbers is considered "0"');
+	console.log('-----------------------------');
+
+	}
+};
 
 
 processor.prototype.div = function(arr)
-				{
+{
 
-	   
-					console.log('Number of Arguments :' +arr.length);
-					var sum = 0;
-					if (arr.length !== 2)
-					{
-						console.log('Warning: Unexpected Number of Arguments, x and y')
-					}
-					else 
-					{
-						console.log('Arguments :');
-	        				for (var i = 0; i < arr.length; i++)
-		        			{
-			                		console.log(arr[i]);
-			        			if (isNaN(arr[i]))
-							{
-								arr[i] = 0;
-							}
-							if (i === 0)
-							{
-								sum += arr[i];
-							}
-							else
-							{
-								sum /= arr[i];
-							}
-						}
 
-					console.log('-----------------------------');
-	        			console.log('Division :', sum);
-					console.log('* Any thing other than numbers is considered "0"');
-	        			console.log('-----------------------------');
+	console.log('Number of Arguments :' +arr.length);
+	var sum = 0;
+	if (arr.length !== 2)
+	{
+		console.log('Warning: Unexpected Number of Arguments, x and y')
+	}
+	else 
+	{
+		console.log('Arguments :');
+		for (var i = 0; i < arr.length; i++)
+		{
+			console.log(arr[i]);
+			if (isNaN(arr[i]))
+			{
+				arr[i] = 0;
+			}
+			if (i === 0)
+			{
+				sum += arr[i];
+			}
+			else
+			{
+				sum /= arr[i];
+			}
+		}
 
-	   				}
-				};
+	console.log('-----------------------------');
+	console.log('Division :', sum);
+	console.log('* Any thing other than numbers is considered "0"');
+	console.log('-----------------------------');
+
+	}
+};
 
 processor.prototype.strCat = function(arr)
 				{
@@ -319,7 +318,7 @@ processor.prototype.writefs = function(arr)
 
 processor.prototype.operater = function(opr, arr)
 				{
-					console.log('Invoking :', cases[0]);
+					console.log('Invoking :', opr);
 					console.log('******************************');
 					if (opr === 'add')
 					{
