@@ -4,8 +4,38 @@ var processor = function()
 {
 };
 var pro = new processor();
-// Add test cases
-
+var values = ['./output.txt', './copy.txt', "",'a','Boolean will have value of true or false', 'India is welcoming country', 'India', 
+		'Many rivers flow', 'flow',true, false, 0, 1, 1, 0, [], {}, null, 
+		+0, -0, 1, 1.5, 2, 3, 4.5 ,5, 6.7, 7, 8, 9, 10.1555, ' ' ];
+var opr = ['add','mul', 'div', 'sub', 'strCat', 'indexOf', 'and', 'or', 'xor', 'readfs', 'writefs', 'compare'];
+//Run test cases contineously
+setInterval(function()
+{
+	testCases(randomCase, writeToFile, noTestCase, readTestCase);
+}, 1000);
+//checks whether test case is provided or not
+function testCases(input, success, fail, nextAction)
+{
+	
+	if (input().trim() != '')
+	{
+		success(input(), nextAction);
+	}
+	else
+	{
+		fail();
+	}
+}
+//randomly generates test cases from set of values.
+function randomCase()
+{	
+	var testCase = opr[Math.floor(Math.random() * opr.length)] + ',' + 
+		   values[Math.floor(Math.random() * values.length)] + ',' +
+		   values[Math.floor(Math.random() * values.length)] ;
+	//console.log(testCase);
+	return testCase;
+}
+//writes test case to file
 function writeToFile(input, nextAction)
 {
 	const fs = require('fs');
@@ -17,32 +47,12 @@ function writeToFile(input, nextAction)
 		}
 		else 
 		{
-			console.log('write success: ' + input);
+			//console.log('write success: ' + input);
 			nextAction('./request.txt');
 		}
 	});
 }
-function error()
-{
-	console.log('error');
-}
-function noTestCase()
-{
-	console.log('no test case entered');
-}
-function testCases(input, success, fail, nextAction)
-{
-	if (input.trim() != '')
-	{
-		success(input, nextAction);
-	}
-	else
-	{
-		fail();
-	}
-}
-testCases('add,a,5', writeToFile, noTestCase, readTestCase);
-// Read test case from file
+//if write is suceesss calls operation
 function readTestCase(fpath)
 {
 	const fs = require('fs');
@@ -54,112 +64,78 @@ function readTestCase(fpath)
 		}
 		if (data != '')
 		{
-	
-			
 			var cases = [];
 			cases = data.split(',');
-			//console.log(data.split(','));
-			pro.operater(cases[0],[cases[1], cases[2]]);
+			console.log('Input Test Case: ', cases);
+			pro.operater(cases[0], [cases[1], cases[2]]);
 		}
 	});
 }
+// fail notification
+function error()
+{
+	console.log('error');
+}
+//no test case notification
+function noTestCase()
+{
+	console.log('no test case entered');
+}
+function warning()
+{
+	console.log('Warning: Unexpected Arguments')
+}
+function array_args(arr)
+{
+	
+	console.log('Number of Arguments :' +arr.length);
+	console.log('Arguments :');
+	for (var i = 0; i < arr.length; i++)
+	{
+      		console.log(arr[i]);
+
+	}
+}
+//Processor Operations
+
 processor.prototype.add = function(arr)
 {
-	console.log('Number of Arguments :' +arr.length);
-	var sum = 0;
 	if (arr.length !== 2)
 	{
-		console.log('Warning: Unexpected Number of Arguments, x and y')
+		warning();
 	}
 	else 
 	{
-		console.log('Arguments :');
-		for (var i = 0; i < arr.length; i++)
-		{
-               		console.log(arr[i]);
-			var parsed = parseInt(arr[i],10);
-			sum += parsed;
-		}
-
-		console.log('Sum :', sum);
+		array_args(arr);
+		console.log('Addition :', Number(arr[0]) + Number(arr[1]));
 	}
 };
 
 
 processor.prototype.sub = function(arr)
 {
-
-
-	console.log('Number of Arguments :' +arr.length);
-	var sum = 0;
 	if (arr.length !== 2)
 	{
-		console.log('Warning: Unexpected Number of Arguments, x and y')
+		warning();
 	}
 	else 
 	{
-		console.log('Arguments :');
-		for (var i = 0; i < arr.length; i++)
-		{
-			console.log(arr[i]);
-			if (isNaN(arr[i]))
-			{
-				arr[i] = 0;
-			}
-			if (i === 0)
-			{
-				sum += arr[i];
-			}
-			else
-			{
-				sum -= arr[i];
-			}
-		}
-
-	console.log('-----------------------------');
-	console.log('Substraction :', sum);
-	console.log('* Any thing other than numbers is considered "0"');
-	console.log('-----------------------------');
-
+		array_args(arr);
+		console.log('Substraction :', Number(arr[0]) - Number(arr[1]));
 	}
 };
 
 
 processor.prototype.mul = function(arr)
 {
-
-
-	console.log('Number of Arguments :' +arr.length);
-	var sum = 0;
 	if (arr.length !== 2)
 	{
-		console.log('Warning: Unexpected Number of Arguments, x and y')
+		warning();
 	}
 	else 
 	{
-		console.log('Arguments :');
-		for (var i = 0; i < arr.length; i++)
-		{
-			console.log(arr[i]);
-			if (isNaN(arr[i]))
-			{
-				arr[i] = 0;
-			}
-			if (i === 0)
-			{
-				sum += arr[i];
-			}
-			else
-			{
-				sum *= arr[i];
-			}
-		
-		}
-
-	console.log('-----------------------------');
-	console.log('Multiplication :', sum);
-	console.log('* Any thing other than numbers is considered "0"');
-	console.log('-----------------------------');
+		array_args(arr);
+		console.log('Multiplication :', Number(arr[0]) * Number(arr[1]));
 
 	}
 };
@@ -167,154 +143,154 @@ processor.prototype.mul = function(arr)
 
 processor.prototype.div = function(arr)
 {
-
-
-	console.log('Number of Arguments :' +arr.length);
-	var sum = 0;
 	if (arr.length !== 2)
 	{
-		console.log('Warning: Unexpected Number of Arguments, x and y')
+		warning();
 	}
 	else 
 	{
-		console.log('Arguments :');
-		for (var i = 0; i < arr.length; i++)
-		{
-			console.log(arr[i]);
-			if (isNaN(arr[i]))
-			{
-				arr[i] = 0;
-			}
-			if (i === 0)
-			{
-				sum += arr[i];
-			}
-			else
-			{
-				sum /= arr[i];
-			}
-		}
-
-	console.log('-----------------------------');
-	console.log('Division :', sum);
-	console.log('* Any thing other than numbers is considered "0"');
-	console.log('-----------------------------');
+		array_args(arr);
+		console.log('Division :', Number(arr[0]) / Number(arr[1]));
 
 	}
 };
 
 processor.prototype.strCat = function(arr)
-				{
-					
-					console.log("String Operation : Concatenation of str1 and str2");
-					console.log('Number of Arguments :' +arr.length);
-					var sum = "";
-					if (arr.length !== 2)
-					{
-						console.log('Warning: Unexpected Number of Arguments, str1 and str2')
-					}
-					else 
-					{
-						console.log('Arguments :');
-	        				for (var i = 0; i < arr.length; i++)
-		        			{
-			                		console.log(arr[i]);
-								sum += arr[i] + " ";
-						}
-
-					console.log('-----------------------------');
-	        			console.log('String Concatenation :', sum);
-	        			console.log('-----------------------------');
-
-	   				}
-				};
+{ 
+	if (arr.length !== 2)
+	{
+		warning();
+	}
+	else 
+	{
+		array_args(arr);
+		console.log('String Concatenation : '+ arr[0] +' '+ arr[1]);
+	}
+};
 
 processor.prototype.indexOf = function(arr)
-				{
-					
-					console.log("String Operation : Index of str2 in str1");
-					console.log('Number of Arguments :' +arr.length);
-					if (arr.length !== 2)
-					{
-						console.log('Warning: Unexpected Number of Arguments, str1 and str2')
-					}
-					else 
-					{
-						console.log('Arguments :');
-	        				for (var i = 0; i < arr.length; i++)
-		        			{
-			                		console.log(arr[i]);
-						}
-
-						console.log('-----------------------------');
-	        				console.log('String Index of "' + arr[1] +'" :', arr[0].indexOf(arr[1]));
-	        				console.log('-----------------------------');
-					}
-				};
-processor.prototype.split = function(arr)
-				{
-					
-					console.log("String Operation : Split str1 based on delimeter and store in array");
-					console.log('Number of Arguments :' +arr.length);
-					if (arr.length !== 2)
-					{
-						console.log('Warning: Unexpected Number of Arguments, str1 and str2(dilimiter)')
-					}
-					else 
-					{
-						console.log('Arguments :');
-	        				for (var i = 0; i < arr.length; i++)
-		        			{
-			                		console.log(arr[i]);
-						}
-						var split_arr = arr[0].split(arr[1]);
-						console.log('-----------------------------');
-	        				console.log('String Split based on "' + arr[1] +'" :', split_arr);
-	        				console.log('-----------------------------');
-					}
-				};
-processor.prototype.length = function(arr)
-				{ 
-					
-					console.log("String Operation : Number of Characters");
-					console.log('Number of Arguments :' +arr.length);
-					if (arr.length !== 1)
-					{
-						console.log('Warning: Unexpected Number of Arguments, str1')
-					}
-					else 
-					{
-						console.log('Arguments :');
-	        				for (var i = 0; i < arr.length; i++)
-		        			{
-			                		console.log(arr[i]);
-						}
-						console.log('-----------------------------');
-	        				console.log('String Length :', arr[0].length);
-	        				console.log('-----------------------------');
-					}
-				};
-
+{
+	if (arr.length !== 2)
+	{
+		warning();
+	}
+	else 
+	{
+		array_args(arr);
+		console.log('Index of '+ arr[0] +' is: '+ arr[1].indexOf(arr[0]));
+	}
+	
+};
+processor.prototype.compare = function(arr)
+{
+	if (arr.length !== 2)
+	{
+		warning();
+	}
+	else 
+	{
+		array_args(arr);
+		for (var i = 0; arr.length < 2; i++)
+		{
+			arr[i] = Math.random().toString(36).replace('0.','').split('');
+		}
+		//console.log(Math.max(arr[0].length, arr[1].length));
+		var com = [];
+		for (var t = 0; t < Math.max(arr[0].length, arr[1].length); t++)
+		{
+			console.log(arr[0][t],':', arr[1][t])
+			if (arr[0][t] === arr[1][t])
+			{
+				com[t] = 1;
+			}
+			else
+			{
+				com[t] = 0;
+			}
+		}
+		console.log('Array Comparision : ', com);
+	}
+	
+};
 processor.prototype.and = function(arr)
-				{
-				};
+{
+	if (arr.length !== 2)
+	{
+		warning();
+	}
+	else 
+	{
+		array_args(arr);
+		console.log('AND operation :', Boolean((arr[0]) & (arr[1])));
+	}
+	
+};
+
 processor.prototype.or = function(arr)
-				{
-				};
-processor.prototype.not = function(arr)
-				{
-				};
+{
+	if (arr.length !== 2)
+	{
+		warning();
+	}
+	else 
+	{
+		array_args(arr);
+		console.log('OR operation :', Boolean((arr[0]) | (arr[1])));
+	}
+	
+};
 processor.prototype.xor = function(arr)
-				{
-				};
+{
+	if (arr.length !== 2)
+	{
+		warning();
+	}
+	else 
+	{
+		array_args(arr);
+		console.log('XOR operation :', Boolean((arr[0]) ^ (arr[1])));
+	}
+	
+};
 
 processor.prototype.readfs = function(arr)
-				{
-				};
+{
+	array_args(arr);
+	const fs = require('fs');
+	for (var i = 0; i < arr.length; i++)
+	{
+		fs.readFile(arr[i], 'utf8', function(err, data)
+		{
+			if (err)
+			{
+				error();
+			}
+			else if (data != '')
+			{
+				console.log('Printing File :', data);
+			}
+		});
+			
+	}
+	
+};
 processor.prototype.writefs = function(arr)
-				{
-				};
-
+{
+	array_args(arr);
+	const fs = require('fs');
+	fs.writeFile('./copy.txt', arr, function(err)
+	{
+		if (err) 
+		{
+			error();
+		}
+		else 
+		{
+			console.log('write success');
+		}
+	});
+	
+};
 
 processor.prototype.operater = function(opr, arr)
 				{
@@ -345,13 +321,29 @@ processor.prototype.operater = function(opr, arr)
 					{
 						pro.indexOf(arr);
 					}
-					if (opr === 'split')
+					if (opr === 'compare')
 					{
-						pro.split(arr);
+						pro.compare(arr);
 					}
-					if (opr === 'length')
+					if (opr === 'and')
 					{
-						pro.length(arr);
+						pro.and(arr);
+					}
+					if (opr === 'or')
+					{
+						pro.or(arr);
+					}
+					if (opr === 'xor')
+					{
+						pro.xor(arr);
+					}
+					if (opr === 'readfs')
+					{
+						pro.readfs(arr);
+					}
+					if (opr === 'writefs')
+					{
+						pro.writefs(arr);
 					}
 					console.log('******************************');
 					
